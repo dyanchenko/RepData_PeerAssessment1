@@ -1,11 +1,6 @@
----
-title: 'Reproducible Research: Peer Assessment 1'
-output:
-  html_document:
-    keep_md: yes
----
+# Reproducible Research: Peer Assessment 1
 
-It is now possible to collect a large amount of data about personal movement using activity monitoring devices such as a Fitbit, Nike Fuelband, or Jawbone Up. These type of devices are part of the ìquantified selfî movement ñ a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks.
+It is now possible to collect a large amount of data about personal movement using activity monitoring devices such as a Fitbit, Nike Fuelband, or Jawbone Up. These type of devices are part of the ‚Äúquantified self‚Äù movement ‚Äì a group of enthusiasts who take measurements about themselves regularly to improve their health, to find patterns in their behavior, or because they are tech geeks.
 
 \
 Having got these data, we decided to analyze them and look at what are the pattern of people's daily activities.
@@ -15,7 +10,8 @@ Having got these data, we decided to analyze them and look at what are the patte
 Before starting any analysis we need to load the data and make some preprocessing steps. Below is the peace of code, where we load the data in R and make some data types transformation (for dates)
 \
 
-```{r, warning=FALSE, echo=TRUE}
+
+```r
 #unzipping the archive with data and reading the file
 library(ggplot2)
 unzip("./activity.zip")
@@ -31,7 +27,8 @@ Not, let's go to some analysis. Let find, what are the average number of steps p
 \
 Here is the R code, which does this analysis, and the histogram, showing the result:
 \
-```{r, warning=FALSE, echo=TRUE}
+
+```r
 # coping RAW data to the new frame - total_per_day
 total_per_day <- data.frame(steps = data$steps, date = data$date)
 
@@ -41,19 +38,29 @@ total_per_day <- total_per_day[!is.na(total_per_day$steps),]
 # aggregating "steps" values by "date" column, applying sum function to calculate totals
 total_per_day <- aggregate(total_per_day$steps, by = list(total_per_day$date), sum)
 ```
-```{r,echo=TRUE, warning=FALSE}
+
+```r
 # plotting the final fram with total numbers of steps for each day
 with(total_per_day, plot(total_per_day$Group.1, total_per_day$x, xlab = "Date", ylab = "Number of steps, taken per day", type = "h", col = "blue"))
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
 #qplot(total_per_day$Group.1, total_per_day$x, data=total_per_day, geom = c("line"), main = "Total number of steps, taken each day", xlab = "Date", ylab = "Number of steps, taken per day", color = day_type)
-
 ```
 \
 
 Below, you can also see the detailed table with mean and median of total steps, taken per day
 
-```{r,  warning=FALSE, echo=TRUE}
+
+```r
 summary(total_per_day$steps)
+```
+
+```
+## Length  Class   Mode 
+##      0   NULL   NULL
 ```
 \
 ## What is the average daily activity pattern?
@@ -62,7 +69,8 @@ For mapping out the daily activity patterns, we will group the data by time inte
 
 The code below represents all there necessary steps:
 \
-```{r, warning=FALSE, echo=TRUE}
+
+```r
 # coping RAW data to the new frame
 average_per_interval <- data.frame(steps = data$steps, interval = data$interval)
 
@@ -86,6 +94,8 @@ with(average_per_interval, abline(v=vl[1,1]))
 txt <- paste("Max steps taken - ", round(vl[1,2]), "\n", "Interval - ", vl[1,1])
 text(x=vl[1,1]+20, y=vl[1,2]-10, labels = txt, adj = 0, cex = 0.6)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 \
 \
 The mapping between intervals and day times
@@ -114,7 +124,8 @@ Original dataset has a lot of missing values in "steps" column, which may introd
 \
 Below you can find the R code, performing necessary operations
 \
-```{r, warning=FALSE, echo=TRUE}
+
+```r
 # Creating a new data set, by copying from the set with raw data.
 # We will fill each NA value in steps column with average value of steps for the corresponding time interval across all days
 data_imp <- data
@@ -137,14 +148,23 @@ for(i in 1:length(data_imp$steps)){
 Having done calculations, we can look at the final date on the histogram below:
 
 \
-```{r, warning=FALSE, echo=TRUE}
+
+```r
 with(data_imp, plot(data_imp$date, data_imp$steps, xlab = "Date", ylab = "Number of steps taken per day", type = "h", col = "blue"))
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
 \
 Below, you can also see the detailed table with mean and median of total values
 \
-```{r, warning=FALSE, echo=TRUE}
+
+```r
 summary(data_imp$steps)
+```
+
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    0.00    0.00    0.00   37.38   27.00  806.00
 ```
 \
 You may have mentioned that having done these transformation to unbias our raw data, we got more realistic statistics - the median value now is equal to zero, because average steps at night and early morning are equal to zero, as well as at late evening. And the mean value, which now more correctly counts night hours, have fallen dramatically.
@@ -157,7 +177,8 @@ Now, let's find the activity patters and their differences between weekdays and 
 \
 The code below represents the necesary transformations and calculations, followed by the data plot with the result.
 \
-```{r, warning=FALSE, echo=TRUE}
+
+```r
 # copy prepocessed data from the previous question
 wd <- data_imp
 
@@ -189,6 +210,8 @@ names(av_per_int_wd) <-c("interval","day_type", "steps")
 # plotting the data, using qplot and facets attribute to show separately data for weekdays and weekends
 qplot(av_per_int_wd$interval,av_per_int_wd$steps, data=av_per_int_wd, facets = day_type~., geom = c("line"), main = "Average steps per interval, depending on the day type", xlab = "Average number of steps", ylab = "Interval", color = day_type)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
 \
 As you can see, the pattern is quite simillar with the most activities done in the morning, afternoon, 3 pm, but at the weekdays, the average steps except early morning is lower in general, then on weekends. The possible explanation may be that people on weekend have more free time, which they might use on some activities, resulting in more steps taken.
 \
