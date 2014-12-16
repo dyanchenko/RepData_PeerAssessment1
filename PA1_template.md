@@ -20,7 +20,7 @@ data <- read.csv("activity.csv", sep=',', header=TRUE)
 # transforming the type of Date column from factor into "Date" type
 data$date <-as.Date(data$date)
 ```
-\
+
 ## What is mean total number of steps taken per day?
 
 Not, let's go to some analysis. Let find, what are the average number of steps people do each day.
@@ -45,24 +45,20 @@ with(total_per_day, plot(total_per_day$Group.1, total_per_day$x, xlab = "Date", 
 ```
 
 ![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
-
-```r
-#qplot(total_per_day$Group.1, total_per_day$x, data=total_per_day, geom = c("line"), main = "Total number of steps, taken each day", xlab = "Date", ylab = "Number of steps, taken per day", color = day_type)
-```
 \
 
 Below, you can also see the detailed table with mean and median of total steps, taken per day
 
 
 ```r
-summary(total_per_day$steps)
+summary(total_per_day$x)
 ```
 
 ```
-## Length  Class   Mode 
-##      0   NULL   NULL
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##      41    8841   10760   10770   13290   21190
 ```
-\
+
 ## What is the average daily activity pattern?
 \
 For mapping out the daily activity patterns, we will group the data by time interval, calculate average number of steps for each interval across all days and plot them.
@@ -169,7 +165,6 @@ summary(data_imp$steps)
 \
 You may have mentioned that having done these transformation to unbias our raw data, we got more realistic statistics - the median value now is equal to zero, because average steps at night and early morning are equal to zero, as well as at late evening. And the mean value, which now more correctly counts night hours, have fallen dramatically.
 
-\
 
 ## Are there differences in activity patterns between weekdays and weekends?
 \
